@@ -17,3 +17,63 @@ SweepFinder2 -f CombinedFreqFile SpectFile
 # run the following for each population. "OutFile" = CLR results
 SweepFinder2 -lg 1000 FreqFile SpectFile OutFile
 
+# we parallelized by splitting the FreqFiles into overlapping chunks, e.g.
+CHUNK=$(sed -n "${SLURM_ARRAY_TASK_ID}p" chunks.txt)
+SweepFinder2 -lg 1000 southafrica_chunks/chr1/${CHUNK} SAfrica_SpectFile.txt southafrica_chunks/chr1/sweepfinder_southafrica_chr1_${CHUNK}
+
+# to generate these chunks:
+OUTPREFIX="chunk"
+NCHUNKS=10
+OVERLAP_BP=50000   # overlap in basepairs
+
+# Get min and max genomic positions
+MIN_POS=$(awk 'NR==2 {print $1}' "$INPUT")
+MAX_POS=$(awk 'END {print $1}' "$INPUT")
+
+RANGE=$((MAX_POS - MIN_POS))
+WINDOW_SIZE=$((RANGE / NCHUNKS))
+
+echo "Min position: $MIN_POS"
+echo "Max position: $MAX_POS"
+echo "Window size: $WINDOW_SIZE"
+echo "Overlap (bp): $OVERLAP_BP"
+
+HEADER=$(head -n 1 "$INPUT")
+
+for ((i=0; i<NCHUNKS; i++)); do
+
+    START=$((MIN_POS + i * WINDOW_SIZE))
+    END=$((MIN_POS + (i + 1) * WINDOW_SIZE))
+
+    # Add overlap (except first and last)
+    if [ $i -ne 0 ]; then
+        START=$((START - OVERLAP_BP))
+    fi
+
+    if [ $i -ne $((NCHUNKS - 1)) ]; then
+        END=$((END + OVERLAP_BP))
+    else
+        END=$MAX_POS
+    fi
+
+    OUTFILE="chr3/${OUTPREFIX}_$((i+1)).txt"
+
+    echo "Writing $OUTFILE (positions $START to $END)"
+
+    {
+        echo "$HEADER"
+        awk -v s="$START" -v e="$END" 'NR>1 && $1 >= s && $1 <= e' "$INPUT"
+    } > "$OUTFILE"
+
+done
+
+# then concatenate results:
+# Keep header from first chunk
+head -n 1 chr3/sweepfinder_madagascar_chr3_chunk_1.txt > sweepfinder_madagascar_chr3_merged.txt
+
+# Concatenate all data rows, sort numerically by location, remove duplicates
+tail -n +2 chr3/sweepfinder_madagascar_chr3_chunk_*.txt \
+    | sort -n -k1,1 \
+    | awk '!seen[$1]++' \
+    >> sweepfinder_madagascar_chr3_merged.txt
+
