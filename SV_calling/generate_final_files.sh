@@ -21,14 +21,19 @@ grep "HIGH" jasmine_filt_snpeff.vcf >> highimpact.vcf
 
 
 #Outlier VCF
-#1. run sweepfinder_ranges.py for each pop/chromosome to generate peak region coordinates. add chrom names and concatenate/sort files to create sweepfinder_ranges_all.bed
+#1. get positions above 99th percentile for CLR value from sweepfinder output for each chromosome
+sf_data <- read.table("/Users/annatrotter/Desktop/lab/sweepfinder/sweepfinder_cg_chr3_merged.txt", header=TRUE)
+print(quantile(sf_data$LR,0.99))
+awk -F '\t' 'NR==1 || $2 > “X”’ sweepfinder_cg_chr3_merged.txt > cg_chr3_99.txt
 
-#2. convert SV coordinates from the full set VCF to BED format using vcf2bed.sh
+#2. run sweepfinder_ranges.py for each pop/chromosome to generate peak region coordinates. add chrom names and concatenate/sort files to create sweepfinder_ranges_all.bed
 
-#3. find intersections between sweepfinder ranges and SVs
+#3. convert SV coordinates from the full set VCF to BED format using vcf2bed.sh
+
+#4. find intersections between sweepfinder ranges and SVs
 bedtools intersect -wa -wb -a jasmine_filt_no0_under100kb.bed -b sweepfinder_ranges_all.bed > outlier_SVs.txt
 
-#4. extract SV IDs from outlier_SVs.txt and filter the main VCF
+#5. extract SV IDs from outlier_SVs.txt and filter the main VCF
 (
           	grep '^#' jasmine_filt_no0_under100kb.vcf
                 grep -Fwf 01_INT_FILES/outlier_ids.txt jasmine_filt_no0_under100kb.vcf
@@ -41,15 +46,15 @@ grep "#" outlier.vcf > highimpact_outlier.vcf
 grep "HIGH" outlier.vcf >> highimpact_outlier.vcf
 
 
-#4. LZV-enriched VCF
+#LZV-enriched VCF
 
 # TODO: REMI
 
-#5. PR-enriched VCF
+#PR-enriched VCF
 
 # TODO: REMI
 
-#6. LZV/PR-enriched VCF
+#LZV/PR-enriched VCF
 
 # TODO: REMI
 
