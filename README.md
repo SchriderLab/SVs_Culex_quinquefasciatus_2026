@@ -1,4 +1,4 @@
-# Structural Variants in Culex_quinquefasciatus
+# Structural Variants in Culex quinquefasciatus
 
 ## Genome assembly and annotation
 
