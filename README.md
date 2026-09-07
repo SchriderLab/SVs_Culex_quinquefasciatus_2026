@@ -37,7 +37,7 @@
 `Enrichment/03_FILTER_PERMS_BY_DATASET.py`
 `Enrichment/04_FILTER_REAL_BYDATSET.py`
 `Enrichment/05_GET_TERM_COUNTS.py`
-`Enrichment/06_GET_PERMUTAT_QVALS_`GENCOUNTS.py`
+`Enrichment/06_GET_PERMUTAT_QVALS_GENCOUNTS.py`
 `Enrichment/07_APPEND_GO_NAMES.py`
 `Enrichment/09_DO_PERM_ON_GENELIST.py`
 
