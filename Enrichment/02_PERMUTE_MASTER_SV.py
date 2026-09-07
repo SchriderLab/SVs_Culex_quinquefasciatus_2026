@@ -2,10 +2,8 @@
 
 """
 Shift the master sv file once per permutation and make sure interval stays in tact
-
-A circular shift that uses a single random offset per chrom pre permutations gets applied to every interval on the chrom
+Use a circular single random offset per chrom pre permutations gets applied to every interval on the chrom
 This preserves the relative spacing between the SVs
-
 USAGE: ./02_PERMUTE_MASTER_SV.py master_svs.tsv GCF_015732765.1_VPISU_Cqui_1.0_pri_paternal_genomic.fna.fai master_perms 10000
 """
 
