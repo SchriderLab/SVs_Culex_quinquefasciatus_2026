@@ -46,5 +46,5 @@
 
 `Enrichment/07_APPEND_GO_NAMES.py`: Takes GO annotation file and the enrichment results file and writes a tab-sep file where each GO ID from the enrichment results is annotated with all relevant info.  
 
-`Enrichment/09_DO_PERM_ON_GENELIST.py`: Test whether IR genes overlap SV regions more often than expected by chance.
+`Enrichment/08_DO_PERM_ON_GENELIST.py`: Test whether IR genes overlap SV regions more often than expected by chance.
 
