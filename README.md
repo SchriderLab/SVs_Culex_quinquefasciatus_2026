@@ -11,7 +11,7 @@
 
 
 ## Structural variant calling
-`SV_calling/SV_calling`: Call SVs in each sample for the four individual callers used here
+`SV_calling/`: Call SVs in each sample for the four individual callers used here
 
 `SV_calling/combiSV.sh`: Merge evidence from the four callers for each sample  
 
