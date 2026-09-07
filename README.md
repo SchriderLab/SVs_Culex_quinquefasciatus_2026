@@ -1,4 +1,4 @@
-# SVs_Culex_quinquefasciatus_2026
+# Structural Variants in Culex_quinquefasciatus
 
 ## Genome assembly and annotation
 
@@ -27,4 +27,4 @@
 
 
 ## SweepFinder analysis
-`sweepfinder/sweepfinder.sh`: commands for running SweepFinder analysis described in Supplemental XXX. Detailed methods for QC, read mapping, and variant calling can be found [here](https://github.com/YukiHaba/PipPop_molestus_origin/tree/main) 
+`sweepfinder/sweepfinder.sh`: commands for running SweepFinder analysis described in the Supplemental Material. Detailed methods for QC, read mapping, and variant calling can be found [here](https://github.com/YukiHaba/PipPop_molestus_origin/tree/main) 
