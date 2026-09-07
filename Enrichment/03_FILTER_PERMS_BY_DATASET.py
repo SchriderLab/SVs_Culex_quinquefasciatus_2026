@@ -2,7 +2,7 @@
 """
 Filter the master permuted SV files - do this for each perm so that only the SVs present in VCF of interest
 are kept.
-USAGE: ./03_filter_perms_by_dataset.py master_perms/ jasmine_overlapping_genes_high_snpeff_CLR_under100kb.vcf master_perms_filtbysnpclr
+USAGE: ./03_FILTER_PERMS_BY_DATASET.py master_perms/ jasmine_overlapping_genes_high_snpeff_CLR_under100kb.vcf master_perms_filtbysnpclr
 """
 
 import sys
