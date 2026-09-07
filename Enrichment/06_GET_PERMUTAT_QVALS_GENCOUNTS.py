@@ -1,3 +1,7 @@
+"""
+Usage:python 06_GET_PERMUTAT_QVALS_GENCOUNTS.py real_term_counts_outlier.tsv permutations_out_outlier/ all
+"""
+
 import sys,os
 
 realCountFile, permCountDir, targetNamespace = sys.argv[1:4]
