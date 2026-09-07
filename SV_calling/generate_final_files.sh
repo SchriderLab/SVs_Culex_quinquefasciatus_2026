@@ -8,6 +8,7 @@
 # /snpEff/./data/GCF_015732765.1/protein.fa
 # /snpEff/./data/GCF_015732765.1/genes.gtf
 # /snpEff/./data/genomes/GCF_015732765.1.fa
+
 # genome must be added to config file
 java -jar snpEff.jar build -gtf22 -v GCF_015732765.1
 
@@ -22,7 +23,7 @@ grep "HIGH" jasmine_filt_snpeff.vcf >> highimpact.vcf
 
 #Outlier VCF
 #1. get positions above 99th percentile for CLR value from sweepfinder output for each chromosome
-sf_data <- read.table("/Users/annatrotter/Desktop/lab/sweepfinder/sweepfinder_cg_chr3_merged.txt", header=TRUE)
+sf_data <- read.table("./sweepfinder/sweepfinder_cg_chr3_merged.txt", header=TRUE)
 print(quantile(sf_data$LR,0.99))
 awk -F '\t' 'NR==1 || $2 > “X”’ sweepfinder_cg_chr3_merged.txt > cg_chr3_99.txt
 
@@ -46,17 +47,8 @@ grep "#" outlier.vcf > highimpact_outlier.vcf
 grep "HIGH" outlier.vcf >> highimpact_outlier.vcf
 
 
-#LZV-enriched VCF
-
-# TODO: REMI
-
-#PR-enriched VCF
-
-# TODO: REMI
-
-#LZV/PR-enriched VCF
-
-# TODO: REMI
+#Population enriched VCF filtering:
+extract_ALL_AF_VCFs.py
 
 #we filtered each VCF for IR gene overlap using the following commands:
 #note: the IR_genes.bed file created from A. gambiae orthologs info - chrom, start, end (see Supplemental Data)
