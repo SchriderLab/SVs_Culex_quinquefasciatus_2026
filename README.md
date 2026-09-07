@@ -32,12 +32,19 @@
 `sweepfinder/sweepfinder.sh`: Run SweepFinder as described in the Supplemental Material. Detailed methods for QC, read mapping, and variant calling can be found [here](https://github.com/YukiHaba/PipPop_molestus_origin/tree/main) 
 
 ## Enrichment analysis
-`Enrichment/01_EXTRACT_MASTER_SV.sh`: Extract all the SV info (SV ID, chrom, position start, position finish) from jasmine_filt_no0_under100kb.vcf (full SV list) 
-`Enrichment/02_PERMUTE_MASTER_SV.sh`: Shift the master SV file once per permutation making sure interval stays in tact. This circular shift uses a single random offset per chrom per mutation.
-`Enrichment/03_FILTER_PERMS_BY_DATASET.py`: Filter the master permuted SV files by SVs present in VCF of interest.
-`Enrichment/04_FILTER_REAL_BYDATSET.py`: Filter the master SV interval file (not permuted) by VCF of interest.
-`Enrichment/05_GET_TERM_COUNTS.py`: Test whether genes affected by SVs are unusually enriched for particular Gene Ontology (GO) functions by comparing the real data against permutations
-`Enrichment/06_GET_PERMUTAT_QVALS_GENCOUNTS.py`: Calc p-values, enrichment scores, and q-values (FDR-adjusted significance) for each GO term by comparing the real gene counts with permutation gene counts
-`Enrichment/07_APPEND_GO_NAMES.py`: Takes GO annotation file and the enrichment results file and writes a tab-sep file where each GO ID from the enrichment results is annotated with all relevant info.
+`Enrichment/01_EXTRACT_MASTER_SV.sh`: Extract all the SV info (SV ID, chrom, position start, position finish) from jasmine_filt_no0_under100kb.vcf (full SV list). 
+
+`Enrichment/02_PERMUTE_MASTER_SV.sh`: Permute the master SV file. This circular shift uses a single random offset per chrom per permutation.  
+
+`Enrichment/03_FILTER_PERMS_BY_DATASET.py`: Filter the master permuted SV files by SVs present in VCF of interest.  
+
+`Enrichment/04_FILTER_REAL_BYDATSET.py`: Filter the master SV interval file (not permuted) by VCF of interest.  
+
+`Enrichment/05_GET_TERM_COUNTS.py`: Test whether genes affected by SVs are unusually enriched for particular Gene Ontology (GO) functions by comparing the real data against permutations  
+
+`Enrichment/06_GET_PERMUTAT_QVALS_GENCOUNTS.py`: Calc p-values, enrichment scores, and q-values (FDR-adjusted significance) for each GO term by comparing the real gene counts with permutation gene counts. 
+
+`Enrichment/07_APPEND_GO_NAMES.py`: Takes GO annotation file and the enrichment results file and writes a tab-sep file where each GO ID from the enrichment results is annotated with all relevant info.  
+
 `Enrichment/09_DO_PERM_ON_GENELIST.py`: Test whether IR genes overlap SV regions more often than expected by chance.
 
