@@ -30,3 +30,14 @@
 
 ## SweepFinder analysis
 `sweepfinder/sweepfinder.sh`: Run SweepFinder as described in the Supplemental Material. Detailed methods for QC, read mapping, and variant calling can be found [here](https://github.com/YukiHaba/PipPop_molestus_origin/tree/main) 
+
+## Enrichment analysis
+`Enrichment/01_EXTRACT_MASTER_SV.sh`
+`Enrichment/02_PERMUTE_MASTER_SV.sh`
+`Enrichment/03_FILTER_PERMS_BY_DATASET.py`
+`Enrichment/04_FILTER_REAL_BYDATSET.py`
+`Enrichment/05_GET_TERM_COUNTS.py`
+`Enrichment/06_GET_PERMUTAT_QVALS_`GENCOUNTS.py`
+`Enrichment/07_APPEND_GO_NAMES.py`
+`Enrichment/09_DO_PERM_ON_GENELIST.py`
+
