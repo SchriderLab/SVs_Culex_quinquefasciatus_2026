@@ -1,6 +1,6 @@
 # Structural Variants in *Culex quinquefasciatus*
 
-## Genome assembly and annotation
+## Genome assembly 
 `Genome_Assembly/assembly.sh`: Assemble all of the *C. quinquefasciatus* genomes
 
 
