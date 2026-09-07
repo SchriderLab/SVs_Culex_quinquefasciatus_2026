@@ -21,6 +21,7 @@ awk '/^S/{print ">"$2;print $3}' [sample].bp.p_ctg.gfa > [sample].bp.p_ctg.fa
 
 kat comp -t 16 -o [sample].KAT [sample].fastq.gz [sample].bp.p_ctg.fa
 
+
 # To purge
 
 minimap2 -t16 -ax map-pb [sample].bp.p_ctg.fa [sample].fastq.gz --secondary=no | samtools sort -m 250G -o [sample].p_ctg.bam -T tmp.ali11
@@ -40,9 +41,11 @@ purge_haplotigs clip -t 16 -l 5000 -p [sample].purge.fasta -h [sample].purge.hap
 
 kat comp -t 16 -o [sample].KAT.CLIP [sample].fastq.gz [sample].purge.clip.fasta
 
+
 # Purge again
 
 run_purge_dups.py config.json ./purge_dups/bin/ [sample]_PUR_CLIP -p bash
+
 
 # Check kmer again 
 
@@ -58,6 +61,7 @@ ragtag.py correct \
 ragtag.py scaffold \
 ./GCF_015732765.1_VPISU_Cqui_1.0_pri_paternal_genomic.fna \
 ragtag_output2/ragtag2.correct.fasta
+
 
 # remove short sequences
 
