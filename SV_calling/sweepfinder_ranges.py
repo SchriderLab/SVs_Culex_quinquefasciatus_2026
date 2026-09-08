@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-df = pd.read_csv("/proj/dschridelab/remi/ANNA_RELAB/02_2026_FINAL2_AT/08_SVs/05_FINAL_FILES/01_INT_FILES/cg_chr3_99.txt", sep="\t")
+df = pd.read_csv("./cg_chr3_99.txt", sep="\t")
 
 
 locations = [int(x) for x in df["location"]]
