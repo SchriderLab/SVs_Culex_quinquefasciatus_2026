@@ -19,7 +19,7 @@
 
 `SV_calling/jasmine.sh`: Combine combiSV results into a multi-sample VCF using Jasmine, individually genotyping these merged variants in each sample using Sniffles2, and generating the final multi-sample full set VCF  
 
-`SV_calling/generate_final_files.sh`: Generate our six additional VCFs: the high-impact VCF, outlier VCF, high-impact outlier VCF, LZV-enriched VCF, PR-enriched VCF, and LZV/PR enriched VCF (and commands to filter each VCF for SVs overlapping IR genes)  
+`SV_calling/generate_final_files.sh`: Generate our six additional VCFs: the high-impact VCF, outlier VCF, high-impact outlier VCF, LZV-enriched VCF, PR-enriched VCF, and LZV/PR enriched VCF (and commands to filter each VCF for SVs overlapping IR genes). This also includes the snpeff code.
 
 `SV_calling/vcf2bed.sh`: Extract SV coordinates from VCF as BED file (used in `generate_final_files.sh`) 
 
