@@ -11,7 +11,7 @@
 
 
 ## Structural variant calling
-`SV_calling/`: Call SVs in each sample for the four individual callers used here
+`SV_calling/Sniffles2.sh`, `SV_calling/cuteSV.sh`, `SV_calling/pbsv.sh`, SV_calling/SVIM_asm.sh`: Call SVs in each sample with the four individual callers used here
 
 `SV_calling/combiSV.sh`: Merge evidence from the four callers for each sample  
 
@@ -21,11 +21,15 @@
 
 `SV_calling/generate_final_files.sh`: Generate our six additional VCFs: the high-impact VCF, outlier VCF, high-impact outlier VCF, LZV-enriched VCF, PR-enriched VCF, and LZV/PR enriched VCF (and commands to filter each VCF for SVs overlapping IR genes)  
 
-`SV_calling/vcf2bed.sh`: script used in `generate_final_files.sh` to extract SV coordinates
+`SV_calling/vcf2bed.sh`: Extract SV coordinates from VCF as BED file (used in `generate_final_files.sh`) 
+
+`SV_calling/sweepfinder_ranges.py`: Extract ranges of CLR peaks based on SweepFinder analysis (used to generate our outlier VCFs)  
+
+`SV_calling/extract_AF_VCFs.py`: Generate LZV, PR, and LZV/PR-enriched VCFs
 
 
 ## SNP calling
-`SNP_calling/call_snps.sh`: commands for joint calling SNPs in our *C. quinquefasciatus* samples and annotating with SnpEff
+`SNP_calling/call_snps.sh`: Commands for joint calling SNPs in our *C. quinquefasciatus* samples and annotating with SnpEff
 
 
 ## SweepFinder analysis
