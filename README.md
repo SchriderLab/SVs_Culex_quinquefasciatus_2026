@@ -11,7 +11,7 @@
 
 
 ## Structural variant calling
-`SV_calling/Sniffles2.sh`, `SV_calling/cuteSV.sh`, `SV_calling/pbsv.sh`, SV_calling/SVIM_asm.sh`: Call SVs in each sample with the four individual callers used here
+`SV_calling/Sniffles2.sh`, `SV_calling/cuteSV.sh`, `SV_calling/pbsv.sh`, `SV_calling/SVIM_asm.sh`: Call SVs in each sample with the four individual callers used here
 
 `SV_calling/combiSV.sh`: Merge evidence from the four callers for each sample  
 
