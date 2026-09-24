@@ -1,0 +1,324 @@
+#Rcode to generate SV deletion plots
+#This example is specific to glutathione S-transferase 1 
+
+library(GenomicRanges)
+library(rtracklayer)
+library(ggplot2)
+library(dplyr)
+library(patchwork)
+library(readr)
+
+# LOCATION 
+chr <- "NC_051862.1"
+region_start <- 160428836  - 2000
+region_end   <- 160429887 + 2000
+
+target_gene <- "LOC6052515"
+
+# DELETION
+
+deletion_start <- 160428836
+deletion_end   <- 160429887
+
+# REPEATS
+
+repeat_file <- "gcf_repeats.bed"
+
+repeat_df <- read_tsv(
+  repeat_file,
+  col_names = c(
+    "chr",
+    "score1",
+    "score2",
+    "repeat_name",
+    "score3",
+    "strand",
+    "start",
+    "end",
+    "rgb"
+  ),
+  show_col_types = FALSE
+)
+
+repeat_df <- repeat_df %>%
+  filter(
+    chr == !!chr,
+    start <= region_end,
+    end >= region_start
+  )
+
+# DEPTH FILES
+
+depth_files <- c(
+  "L1.glut.depth.gz",
+  "L3.glut.depth.gz",
+  "L4.glut.depth.gz",
+  "L5.glut.depth.gz",
+  "P1.glut.depth.gz",
+  "P4.glut.depth.gz",
+  "P9.glut.depth.gz"
+)
+
+sample_names <- c("LZV1","LZV3","LZV4","LZV5","PR1","PR4","PR9")
+
+
+# NORMALIZATION
+
+denominators <- c(
+  "LZV1" = 83.5733,
+  "LZV3" = 72.4586,
+  "LZV4" = 67.7258,
+  "LZV5" = 76.835,
+  "PR1"  = 84.5746,
+  "PR4"  = 85.6314,
+  "PR9"  = 75.2186
+)
+
+
+# GENOTYPES
+
+genotype_map <- data.frame(
+  sample = sample_names,
+  genotype = c("0/1","0/0","0/1","1/1","0/0","0/0","0/0")
+)
+
+
+# GFF IMPORT
+
+gtf <- import(
+  "GCF_015732765.1_VPISU_Cqui_1.0_pri_paternal_genomic.gff"
+)
+
+
+options(ucscChromosomeNames = FALSE)
+
+# REGION FILTER
+
+region_gtf <- gtf[
+  seqnames(gtf) == chr &
+    start(gtf) <= region_end &
+    end(gtf) >= region_start
+]
+
+region_gtf <- region_gtf[
+  grepl(target_gene, region_gtf$gene)
+]
+
+# EXONS
+
+exons <- region_gtf[mcols(region_gtf)$type == "exon"]
+
+if("transcript_id" %in% colnames(mcols(exons))) {
+  exons <- exons[!is.na(exons$transcript_id)]
+  exons$tx <- exons$transcript_id
+} else {
+  exons$tx <- "tx1"
+}
+
+main_tx <- names(which.max(table(exons$tx)))
+exons <- exons[exons$tx == main_tx]
+
+# GENE STRAND
+
+gene_strand <- as.character(unique(strand(exons)))
+gene_strand <- gene_strand[!is.na(gene_strand)][1]
+
+gene_start <- min(start(exons))
+gene_end   <- max(end(exons))
+
+arrow_df <- data.frame(
+  x = gene_start,
+  xend = gene_end,
+  y = 1,
+  yend = 1
+)
+
+arrow_type <- ifelse(gene_strand == "-", "open", "closed")
+
+# EXON DATA
+
+exon_df <- data.frame(
+  start = start(exons),
+  end = end(exons)
+)
+
+exon_df <- exon_df[order(exon_df$start), ]
+
+intron_df <- data.frame(
+  x = head(exon_df$end, -1),
+  xend = tail(exon_df$start, -1)
+)
+
+# Keep introns that overlap the plotting region
+intron_df <- intron_df[
+  intron_df$x <= region_end &
+    intron_df$xend >= region_start,
+]
+
+# Clip them to the plot boundaries
+intron_df$x    <- pmax(intron_df$x, region_start)
+intron_df$xend <- pmin(intron_df$xend, region_end)
+
+# DELETION BAND
+
+del_band <- data.frame(
+  xmin = deletion_start,
+  xmax = deletion_end,
+  ymin = -Inf,
+  ymax = Inf
+)
+
+# EXON PLOT
+
+exon_plot <- ggplot() +
+  
+  geom_rect(
+    data = del_band,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    fill = "firebrick",
+    alpha = 0.15
+  ) +
+  
+  geom_segment(
+    data = intron_df,
+    aes(x = x, xend = xend, y = 1, yend = 1),
+    linewidth = 0.7
+  ) +
+  
+  geom_rect(
+    data = exon_df,
+    aes(xmin = start, xmax = end, ymin = 0.8, ymax = 1.2),
+    fill = "steelblue"
+  ) +
+  
+  geom_segment(
+    data = arrow_df,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(type = arrow_type, length = unit(0.2, "cm")),
+    linewidth = 0.8,
+    color = "black"
+  ) +
+  
+  xlim(region_start, region_end) +
+  theme_void() +
+  labs(title = paste0(target_gene, " (", gene_strand, " strand)"))
+
+# REPEAT TRACK
+
+repeat_plot <- ggplot() +
+  
+  geom_rect(
+    data = del_band,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    fill = "firebrick",
+    alpha = 0.15
+  ) +
+  
+  geom_rect(
+    data = repeat_df,
+    aes(
+      xmin = start,
+      xmax = end,
+      ymin = 0.7,
+      ymax = 1.3
+    ),
+    fill = "darkgreen"
+  ) +
+  
+  xlim(region_start, region_end) +
+  theme_void() +
+  labs(title = "Repeats")
+
+# DELETION TRACK
+
+deletion_plot <- ggplot() +
+  
+  geom_rect(
+    data = del_band,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    fill = "firebrick",
+    alpha = 0.15
+  ) +
+  
+  geom_rect(
+    aes(xmin = deletion_start, xmax = deletion_end, ymin = 0.7, ymax = 1.3),
+    fill = "firebrick"
+  ) +
+  
+  xlim(region_start, region_end) +
+  theme_void() +
+  labs(title = "Deletion")
+
+# COVERAGE
+
+get_cov_df <- function(depth_file, sample) {
+  
+  df <- read_tsv(
+    depth_file,
+    col_names = c("chr", "pos", "cov"),
+    show_col_types = FALSE
+  )
+  
+  df <- df %>%
+    filter(
+      chr == !!chr,
+      pos >= region_start,
+      pos <= region_end
+    ) %>%
+    mutate(
+      cov = as.numeric(cov),
+      cov = ifelse(is.na(cov), 0, cov),
+      norm_cov = cov / denominators[[sample]],
+      sample = sample
+    )
+  
+  df
+}
+
+cov_df <- bind_rows(
+  mapply(get_cov_df, depth_files, sample_names, SIMPLIFY = FALSE)
+)
+
+cov_df <- cov_df %>%
+  left_join(genotype_map, by = "sample")
+
+
+# COVERAGE PLOT
+
+
+coverage_plot <- ggplot(cov_df, aes(x = pos, y = norm_cov)) +
+  
+  geom_rect(
+    data = del_band,
+    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+    fill = "firebrick",
+    alpha = 0.15,
+    inherit.aes = FALSE
+  ) +
+  
+  geom_line(linewidth = 0.7) +
+  
+  facet_wrap(~sample, ncol = 1, scales = "fixed") +
+  
+  geom_text(
+    data = genotype_map,
+    aes(x = region_start + 50, y = Inf, label = genotype),
+    inherit.aes = FALSE,
+    hjust = 0,
+    vjust = 1.5,
+    size = 4.5
+  ) +
+  
+  theme_bw() +
+  labs(x = chr, y = "Normalized coverage")
+
+# FINAL PLOT
+
+final_plot <-
+  exon_plot /
+  repeat_plot /
+  deletion_plot /
+  coverage_plot +
+  plot_layout(heights = c(1, 0.6, 0.6, 8))
+
+final_plot
