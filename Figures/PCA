@@ -1,0 +1,5 @@
+# SV-based PCA 
+# remove missing data
+bcftools view -e 'GT="mis"' jasmine_filt_no0_under100kb.vcf -Ov -o no_missing.vcf
+plink2 --vcf no_missing.vcf --freq --allow-extra-chr --out nomissing-freq.afreq
+plink2 --allow-extra-chr --out nomissing-freq-pca --pca 7 --read-freq nomissing-freq --set-all-var-ids @:# --vcf no_missing.vcf
