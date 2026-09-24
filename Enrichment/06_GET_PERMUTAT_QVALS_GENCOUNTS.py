@@ -115,10 +115,23 @@ sys.stderr.write(f"\ndone\n")
 positiveCount = len(realCounts)
 minQVal=1.0
 minNonZeroQVal=1.0
+
+lambda_ = 0.5
+upperBound = 0.95
+nullCount = 0
+for pCount in outLineH:
+    pVal = pCount/float(totalCount)
+    if lambda_ < pVal <= upperBound:
+        nullCount += len(outLineH[pCount])
+
+expectedH0 = nullCount/(upperBound - lambda_)
+pi0 = min(expectedH0 / float(len(realCounts)), 1.0)  # cap at 1.0
+sys.stderr.write(f"estimated pi0: {pi0}\n")
+
 sys.stderr.write("calculating q-values\n")
 for pCount in sorted(outLineH, reverse=True):
     pVal = pCount/float(totalCount)
-    fdr = (pVal*len(realCounts))/positiveCount
+    fdr = (pVal*len(realCounts)*pi0)/positiveCount
     if fdr < minQVal:
         if fdr != 0:
             minNonZeroQVal = fdr
@@ -126,7 +139,7 @@ for pCount in sorted(outLineH, reverse=True):
     if minQVal > 0:
         qValStr = str(minQVal)
     else:
-        qVal = ((1/float(totalCount))*len(realCounts))/positiveCount
+        qVal = ((1/float(totalCount))*len(realCounts)*pi0)/positiveCount
         if qVal < minNonZeroQVal:
             qValStr = "<%s" %(qVal)
         else:
@@ -134,7 +147,12 @@ for pCount in sorted(outLineH, reverse=True):
     outLines = []
     for enrichment, outLine in sorted(outLineH[pCount]):
         print(outLine + "; q-value: %s" %(qValStr))
+    print(
+        f"pVal: {pVal}, len(realCounts): {len(realCounts)}, pi0: {pi0}, "
+        f"positiveCount: {positiveCount}, fdr: {fdr}, minQVal: {minQVal}, "
+        f"minNonZeroQVal: {minNonZeroQVal}\n"
+    )
     positiveCount -= len(outLineH[pCount])
-
+ 
 sys.stderr.write(f"pCount: {pCount}, totalCount: {totalCount}, pVal: {pVal}, fdr: {fdr}\n")
 sys.stderr.write("all done!\n")
