@@ -117,11 +117,10 @@ minQVal=1.0
 minNonZeroQVal=1.0
 
 lambda_ = 0.5
-upperBound = 0.95
 nullCount = 0
 for pCount in outLineH:
     pVal = pCount/float(totalCount)
-    if lambda_ < pVal <= upperBound:
+    if lambda_ < pVal:
         nullCount += len(outLineH[pCount])
 
 expectedH0 = nullCount/(1.0 - lambda_)
