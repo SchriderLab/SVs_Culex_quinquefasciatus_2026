@@ -126,7 +126,6 @@ for pCount in outLineH:
 expectedH0 = nullCount/(1.0 - lambda_)
 pi0 = min(expectedH0 / float(len(realCounts)), 1.0)  
 sys.stderr.write(f"estimated pi0: {pi0}\n")
-# --- end pi0 estimator ---
 
 sys.stderr.write("calculating q-values\n")
 for pCount in sorted(outLineH, reverse=True):
