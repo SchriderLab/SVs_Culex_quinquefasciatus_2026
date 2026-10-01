@@ -139,7 +139,7 @@ for pCount in sorted(outLineH, reverse=True):
     if minQVal > 0:
         qValStr = str(minQVal)
     else:
-        qVal = ((1/float(totalCount))*len(realCounts)*pi0)/positiveCount
+	qVal = ((1/float(totalCount))*len(realCounts)*pi0)/positiveCount
         if qVal < minNonZeroQVal:
             qValStr = "<%s" %(qVal)
         else:
@@ -148,7 +148,7 @@ for pCount in sorted(outLineH, reverse=True):
     for enrichment, outLine in sorted(outLineH[pCount]):
         print(outLine + "; q-value: %s" %(qValStr))
     print(
-        f"pVal: {pVal}, len(realCounts): {len(realCounts)}, pi0: {pi0}, "
+	f"pVal: {pVal}, len(realCounts): {len(realCounts)}, pi0: {pi0}, "
         f"positiveCount: {positiveCount}, fdr: {fdr}, minQVal: {minQVal}, "
         f"minNonZeroQVal: {minNonZeroQVal}\n"
     )
